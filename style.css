@@ -1,0 +1,22 @@
+.reveal .controls {
+  display: none;
+}
+
+.reveal section h2 {
+  margin: 0 0 30px 0;
+}
+
+.reveal section li {
+  margin: 20px 0;
+}
+
+.reveal section img {
+  margin: 20px 0;
+  max-height: 500px;
+}
+
+.reveal section img {
+  background: none; 
+  border: none; 
+  box-shadow: none;
+}
