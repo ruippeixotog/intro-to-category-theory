@@ -1,6 +1,7 @@
 ---
 title: (Yet Another) Introduction to Category Theory
 theme: serif
+css: style.css
 revealOptions:
   margin: 0.2
   transition: fade
