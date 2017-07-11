@@ -13,10 +13,16 @@
 .reveal section img {
   margin: 20px 0;
   max-height: 500px;
-}
 
-.reveal section img {
   background: none; 
   border: none; 
   box-shadow: none;
+}
+
+.reveal section code {
+  font-family: "Courier";
+}
+
+.reveal .speaker-notes p {
+  margin: 0;
 }
