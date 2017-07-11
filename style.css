@@ -22,3 +22,7 @@
 .reveal section code {
   font-family: "Courier";
 }
+
+.reveal .speaker-notes p {
+  margin: 0;
+}

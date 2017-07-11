@@ -22,11 +22,7 @@ June 20, 2017
 
 Note:
 
-- Not a presentation to help being a better programmer (at least directly)
-- Will miss some very important things in CT
-- Will sacrifice formal correctness for ease of understanding
-- Focus on abstract data types and how patterns are derived
-- Next talk can go deeper on type classes
+This is a very short introduction to category theory focused on the base concepts for understanding the nature of abstract data types and how the underlying patterns are derived. It's by all means not complete; it misses some very important things in category theory and it most probably sacrifices formal correctness for ease of understanding.
 
 
 ---
@@ -38,7 +34,14 @@ Note:
 
 Note:
 
-- result of abstracting many similar math structs
+A category is composed by a (possibly infinite) set of objects and directed arrows linking them. Some conditions related to composition are necessary for such a structure to be considered as a category:
+
+- Every object $A$ must have an identity arrow called $id_A$ starting and ending in itself;
+- Every time we have three (possibly non-distinct) objects $A$, $B$ and $C$ and arrows $f: A \rightarrow B$ and $g: B \rightarrow C$, there must exist the arrow from $A$ to $C$ called $f∘g$. This is called the composition of $f$ and $g$;
+- The identity arrow must be the unit of composition;
+- Composition must be associative.
+
+The equality of arrows is different for different categories: apart from what the laws of categories tell us, we can't compare them directly.
 
 
 ---
@@ -64,12 +67,6 @@ Note:
 
 ![](img/composition.png)
 
-Note:
-
-- Looks totally like functions, but try to abstract from it
-- An abstraction layer: define behavior without knowing the specific implementation
-- The equality of arrows is different for different categories: apart from the laws of categories, we can't compare them
-
 
 ---
 
@@ -77,6 +74,12 @@ Note:
 ## **Set** Category
 
 ![](img/set.png)
+
+Note:
+
+In the **Set** category, objects are sets of elements and arrows are functions between them. Identity and composition are trivially defined.
+
+The concept of category is a kind of abstraction layer over the operations typically defined on sets. It allows us to use what we know from math in other domains, as long as their structure fits a category.
 
 
 ---
@@ -97,8 +100,9 @@ Note:
 
 Note:
 
-- Explain why Haskell instead of Scala
-- Warn about the existence of a bottom instance
+The **Hask** category is the category of Haskell types. Objects are types (which can be seen as sets of instances) and arrows are Haskell functions.
+
+Due to the nature of computing and the impossibility of detecting (and thus disallowing) non-terminating programs, there must exist an extra "bottom" instance in each type. Theoretically, this presents many issues; in practice, we can ignore that aspect and treat **Hask** just like **Set**.
 
 
 ---
@@ -115,11 +119,6 @@ compose g f x = g (f x)
 -- compose g f = g . f
 -- compose = (.)
 ```
-
-Note:
-
-- Try to abstract about the meaning of the objects and arrows
-- Objects and arrows are black boxes
 
 
 ---
@@ -142,12 +141,8 @@ Note:
 - Patterns of relationships between objects
 - Allows reusing laws from one category in others
 - A balance of precision and recall
-  1. pick a pattern and look for all its occurences
+  1. pick a pattern and look for all its occurrences
   2. rank the hits and pick the best fit
-
-Note:
-
-- "There is a common construction in category theory called the universal construction for defining objects in terms of their relationships. One way of doing this is to pick a pattern, a particular shape constructed from objects and morphisms, and look for all its occurrences in the category. If it’s a common enough pattern, and the category is large, chances are you’ll have lots and lots of hits. The trick is to establish some kind of ranking among those hits, and pick what could be considered the best fit."
 
 
 ---
@@ -159,10 +154,7 @@ Note:
 
 Note:
 
-- An object with arrows for every other object
-- No guarantee that such an object exists (ok), there can be too much
-- Restrict to a unique arrow
-- Now unique up to isomorphism (explain later)
+The first universal construction is that of an object with arrows for every other object. There's no guarantee that such an object exists (which is OK), but there can be too much. If we restrict our pattern to require the initial object to have a *unique* arrow from it to each object in the category, such an object is now unique up to isomorphism (which is explained later).
 
 
 ---
@@ -183,6 +175,10 @@ Note:
 
 ![](img/terminal.png)
 
+Note:
+
+By reversing all arrows in the initial object pattern, we have a terminal object - one object with an unique arrow pointing from each object of the category to itself.
+
 
 ---
 
@@ -197,7 +193,7 @@ Note:
 
 Note:
 
-- Rules are kept the same
+Note that the rules are very similar to the initial object rules.
 
 
 ---
@@ -209,10 +205,6 @@ Note:
 - Automatically a category:
   - $id^{op} = id$
   - If $h = g∘f$, then $h^{op} = f^{op}∘g^{op}$
-
-Note:
-
-- "doubles the productivity of every mathematician working in category theory"
 
 
 ---
@@ -264,6 +256,7 @@ Note:
   - But there can be only one arrow from $0^A$ to any other object, and we already have $id_A$! <!-- .element: class="fragment" -->
 - No need to show the same thing for the terminal object! <!-- .element: class="fragment" -->
 
+
 ---
 
 
@@ -304,6 +297,10 @@ outr :: (Int, Bool) -> Bool
 outr (x, b) = b
 ```
 
+Note:
+
+We can show that the type `(Int, Bool)` is a valid product of `Int` and `Bool` according to our first definition by showing the `outl` and `outr` arrows for it.
+
 
 ---
 
@@ -317,6 +314,10 @@ outl x = x
 outr :: Int -> Bool
 outr _ = True
 ```
+
+Note:
+
+However, the definition also allows less suitable types to work as products, such as `Int` and `(Int, Int, Bool)`.
 
 
 ---
@@ -344,10 +345,6 @@ outr (_, _, b) = b
   - $P$ is "better" than $Q$ iff there exists an **unique** arrow $m: Q \rightarrow P$ such that $outl_Q = outl_P∘m$ and $outr_Q = outr_P∘m$
   - Similiar to factorization in mathematics
 
-Note:
-
-- "We would like to say that c is “better” than c’ if there is a morphism m from c’ to c — but that’s too weak. We also want its projections to be “better,” or “more universal,” than the projections of c’. What it means is that the projections p’ and q’ can be reconstructed from p and q using m."
-
 
 ---
 
@@ -370,7 +367,9 @@ m :: (Int, Bool) -> Int
 
 Note:
 
-- `Int` conveys too little information
+Using our new ranking method, we show that neither `Int` nor `(Int, Int, Bool)` have suitable factorization functions to `(Int, Bool)`.
+
+As `Int` cannot hold all the information in `(Int, Bool)`, there is no suitable function.
 
 
 ---
@@ -394,7 +393,7 @@ m :: (Int, Bool) -> (Int, Int, Bool)
 
 Note:
 
-- There is not an unique way to factorize `(Int, Int, Bool)`
+`(Int, Int, Bool)` holds too much information, resulting in the existence of multiple factorization functions (the factorization function should be unique).
 
 
 ---
@@ -418,6 +417,10 @@ factorizer outl outr = \x -> (outl x, outr x)
 ## Coproducts
 
 ![](img/coproduct.png)
+
+Note:
+
+A product in the opposite category is called a coproduct. By duality, all reasoning done in products can be ported to coproducts.
 
 
 ---
@@ -472,6 +475,10 @@ data Contact = Contact {  -- String * Int * Bool
 (Int, Bool, String, ())   -- Int * Bool * String * 1
 ```
 
+Note:
+
+Products in **Hask** can be composed, are associative and have the terminal object as its unit. Note the similarity with the multiplication operation and the number 1.
+
 
 ---
 
@@ -496,6 +503,10 @@ data JsValue2 =                     -- String + Int + Bool + 0
   JsString String | JsNumber Int |
   JsBoolean Bool | Void
 ```
+
+Note:
+
+Coproducts are also composable, associative and have the initial object as its unit. Note once more the similarity with the addition operation and the number 0.
 
 
 ---
@@ -540,6 +551,10 @@ Either (String, Int) (String, Bool)
 Void
 ```
 
+Note:
+
+Products in **Hask** distribute over coproducts and the initial object is the absorbing element of the product. Note once more the similarity with math.
+
 
 ---
 
@@ -563,6 +578,10 @@ Void
 | $a \times b$ | `(a, b)` or `Pair a b = Pair a b`
 | $2 = 1 + 1$  | <code>data Bool = True &#124; False</code>
 | $1 + a$      | <code>data Maybe = Nothing &#124; Just a</code>
+
+Note:
+
+Due to all the conditions presented, types can be mapped to natural numbers. The natural number corresponds to the number of instances of the respective type.
 
 
 ---
